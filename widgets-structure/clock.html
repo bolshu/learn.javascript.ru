@@ -32,23 +32,23 @@
     class Clock {
       constructor(elem) {
         this.timer = null;
-        this.elem = elem.elem;
+        this.elem = elem;
       }
 
       render() {
         const date = new Date();
 
         const hour = date.getHours();
-        this.setTime(hour, 'hour');
+        this.setValue(hour, 'hour');
 
         const min = date.getMinutes();
-        this.setTime(min, 'min');
+        this.setValue(min, 'min');
 
         const sec = date.getSeconds();
-        this.setTime(sec, 'sec');
+        this.setValue(sec, 'sec');
       }
 
-      setTime(value, selector) {
+      setValue(value, selector) {
         if (value < 10) {
           value = `0${value}`;
         }
@@ -68,9 +68,7 @@
       }
     }
 
-    pageClock = new Clock({
-      elem: document.getElementById('clock')
-    });
+    pageClock = new Clock(document.getElementById('clock'));
   </script>
 
   <input type="button" onclick="pageClock.start()" value="Старт">

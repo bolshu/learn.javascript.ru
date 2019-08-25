@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+  <title>Tooltip</title>
+  <meta charset="utf-8">
+  <style>
+    body {
+      height: 2000px;
+      /* подсказка должна работать независимо от прокрутки */
+    }
+
+    .tooltip {
+      position: fixed;
+      padding: 10px 20px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 18px;
+      font-style: italic;
+      background: #fff;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .3);
+    }
+  </style>
+</head>
+
+<body>
+  <p>ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя</p>
+  <p>ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя</p>
+
+  <button data-tooltip="подсказка длиннее, чем элемент">Короткая кнопка</button>
+  <button data-tooltip="HTML<br>подсказка">Ещё кнопка</button>
+
+  <p>Прокрутите страницу, чтобы ссылки были вверху и проверьте, правильно ли показываются подсказки.</p>
+
+
+  <script>
+    const body = document.body;
+
+    document.addEventListener('mouseover', showTooltip);
+
+    function showTooltip(event) {
+      const target = event.target;
+      const dataTooltip = target.getAttribute('data-tooltip');
+
+      if (!dataTooltip || !target) return;
+
+      addTooltip(dataTooltip, target);
+    }
+
+    function addTooltip(dataTooltip, target) {
+      const tooltip = document.createElement('DIV');
+
+      tooltip.classList.add('tooltip');
+      tooltip.innerHTML = dataTooltip;
+
+      body.appendChild(tooltip);
+
+      setTooltipPosition(target, tooltip);
+    }
+
+    function setTooltipPosition(target, tooltip) {
+      const TOOLTIP_OFSET = 10;
+
+      const targetParams = target.getBoundingClientRect();
+      const targetCenterX = targetParams.x + targetParams.width / 2;
+
+      const tooltipParams = tooltip.getBoundingClientRect();
+      const tooltipX = targetCenterX - tooltipParams.width / 2;
+      const tooltipY = pageYOffset + tooltipParams.height;
+
+      if (tooltipY < targetParams.y) {
+        tooltip.style.top = `${targetParams.y - tooltipParams.height - TOOLTIP_OFSET}px`;
+      } else {
+        tooltip.style.top = `${targetParams.y + targetParams.height + TOOLTIP_OFSET}px`;
+      }
+
+      if (tooltipX < 0) {
+        tooltip.style.left = `${target.x}px`;
+      } else {
+        tooltip.style.left = `${tooltipX}px`;
+      }
+    }
+
+    document.addEventListener('mouseout', hideTooltip);
+
+    function hideTooltip(event) {
+      const target = event.target;
+      const tooltip = body.querySelector('.tooltip');
+
+      removeTooltip(tooltip);
+    }
+
+    function removeTooltip(tooltip) {
+      if (tooltip) {
+        tooltip.remove();
+      }
+    }
+  </script>
+
+</body>
+
+</html>

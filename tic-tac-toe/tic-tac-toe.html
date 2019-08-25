@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+  <title>Крестики-нолики!</title>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+</head>
+
+<body>
+
+  <h1>
+    Крестики-нолики!
+  </h1>
+  <div id="field"></div>
+
+  <script>
+    const FIELD = document.querySelector('#field');
+    const CELL_COUNT = 9;
+    const PLAYERS = {
+      CROSS: 'cross',
+      ZERO: 'zero',
+    };
+    const WIN_CELLS = [
+      [0, 1, 2],
+      [2, 5, 8],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [3, 4, 5],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    class Game {
+      currentPlayer;
+      moveCounter;
+
+      constructor() {
+        this.start();
+      }
+
+      start() {
+        this.renderPlayfield();
+        this.renderResetButton();
+        this.currentPlayer = PLAYERS.CROSS;
+        this.moveCounter = 0;
+      }
+
+      renderPlayfield() {
+        const playfield = document.createElement('DIV');
+
+        playfield.classList.add('playfield');
+
+        for (let i = 1; i <= CELL_COUNT; i++) {
+          const cell = document.createElement('DIV');
+          cell.classList.add('cell');
+          playfield.appendChild(cell);
+        }
+
+        FIELD.appendChild(playfield);
+
+        playfield.addEventListener('click', e => this.move(e));
+      }
+
+      renderResetButton() {
+        const resetButton = document.createElement('BUTTON');
+
+        resetButton.innerHTML = 'По новой!';
+        resetButton.classList.add('reset-btn');
+
+        FIELD.appendChild(resetButton);
+
+        resetButton.addEventListener('click', () => this.reset());
+      }
+
+      reset() {
+        FIELD.innerHTML = null;
+        this.currentPlayer = null;
+
+        this.start();
+      }
+
+      move(event) {
+        const target = event.target;
+
+        if (target.classList.contains(PLAYERS.ZERO) || target.classList.contains(PLAYERS.CROSS)) return;
+
+        this.moveCounter++;
+
+        target.classList.add(this.currentPlayer);
+
+        this.checkWinner(this.currentPlayer);
+        this.switchPlayer();
+      }
+
+      switchPlayer() {
+        this.currentPlayer = this.currentPlayer === PLAYERS.ZERO ? PLAYERS.CROSS : PLAYERS.ZERO;
+      }
+
+      checkWinner(player) {
+        const cells = FIELD.querySelectorAll('.cell');
+
+        const isWin = cell => {
+          return cells[cell].classList.contains(player)
+        };
+
+        for (let i = 0; i < WIN_CELLS.length; i++) {
+          const winnerCells = WIN_CELLS[i];
+
+          for (let i = 0; i < WIN_CELLS.length; i++) {
+            const winnerCells = WIN_CELLS[i];
+
+            if (winnerCells.every(isWin)) {
+              this.renderStats();
+              this.markWinnerCells(winnerCells);
+              break;
+            } else {
+              continue;
+            };
+          }
+        }
+
+        if (this.moveCounter > 8) {
+          this.renderStats(true);
+        }
+      }
+
+      renderStats(draw = false) {
+        const stats = document.createElement('DIV');
+        const player = this.currentPlayer === PLAYERS.CROSS ? 'крестики' : 'нолики';
+
+        stats.classList.add('stats');
+
+        stats.innerHTML = draw ? `Ничья!` : `Победили ${player}!`;
+
+        FIELD.appendChild(stats);
+      }
+
+      markWinnerCells(winnerCells) {
+        const cells = FIELD.querySelectorAll('.cell');
+
+        winnerCells.forEach(cell => {
+          cells[cell].classList.add('cell--winer');
+        });
+      }
+    }
+
+    const game = new Game();
+  </script>
+
+</body>
+
+</html>

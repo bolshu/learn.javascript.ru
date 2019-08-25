@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+  <title>Menu</title>
+  <meta charset="utf-8">
+  <style>
+    .menu ul {
+      display: none;
+    }
+
+    .menu.open ul {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <script>
+
+    class Menu {
+      constructor(options) {
+        this.elem = null;
+        this.title = options.title;
+        this.items = options.items;
+      }
+
+      render() {
+        this.elem = document.createElement('div');
+        this.elem.classList.add('menu');
+
+        const titleElem = document.createElement('span');
+
+        titleElem.classList.add('title');
+        titleElem.textContent = this.title;
+
+        this.elem.appendChild(titleElem);
+
+        this.addEventListeners();
+      }
+
+      renderItems() {
+        const items = this.items || [];
+        const list = document.createElement('ul');
+
+        items.forEach(function (item) {
+          const li = document.createElement('li');
+
+          li.textContent = item;
+          list.appendChild(li);
+        });
+
+        elem.appendChild(list);
+      }
+
+      getElem() {
+        if (!this.elem) {
+          this.render()
+        };
+
+        return this.elem;
+      }
+
+      open() {
+        if (!this.elem.querySelector('ul')) {
+          this.renderItems();
+        }
+
+        this.elem.classList.add('open');
+      }
+
+      close() {
+        this.elem.classList.remove('open');
+      }
+
+      toggle(e) {
+        const closestTitle = e.target.closest('.title');
+
+        if (closestTitle && this.elem.contains(closestTitle)) {
+          if (this.elem.classList.contains('open')) {
+            this.close();
+          } else {
+            this.open();
+          }
+        }
+      }
+
+      addEventListeners() {
+        this.elem.addEventListener('mousedown', e => {
+          return false;
+        });
+
+        this.elem.addEventListener('click', e => this.toggle(e));
+      }
+    }
+
+    const menu = new Menu({
+      title: "Сладости",
+      items: [
+        "Торт",
+        "Пончик",
+        "Пирожное",
+        "Шоколадка",
+        "Мороженое"
+      ]
+    });
+
+    const elem = menu.getElem();
+
+    document.body.appendChild(elem);
+
+  </script>
+
+</body>
+
+</html>

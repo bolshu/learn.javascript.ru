@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+  <title>String buffer</title>
+  <meta charset="utf-8">
+</head>
+
+<body>
+
+  <script>
+
+    function makeBuffer() {
+      let string = '';
+
+      function buffer(val) {
+        if (arguments.length) {
+          string += '' + val;
+        } else {
+          return string;
+        }
+      }
+
+      buffer.clear = () => {
+        string = '';
+      }
+
+      return buffer;
+    }
+
+    var buffer = makeBuffer();
+
+    buffer('1');
+    buffer('2');
+
+    alert(buffer());
+
+    buffer.clear();
+    buffer('---123');
+    alert(buffer());
+
+  </script>
+
+</body>
+
+</html>

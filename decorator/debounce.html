@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+  <title>Debounce</title>
+  <meta charset="utf-8">
+</head>
+
+<body>
+
+  <script>function debounce(fn, ms) {
+      let interval;
+      return function (...args) {
+        if (interval) {
+          clearInterval(interval);
+        }
+        interval = setTimeout(() => {
+          fn.apply(this, args);
+          interval = null;
+        }, ms);
+      }
+    }
+
+    const foo = {
+      bar: debounce(function () {
+        console.log('BAM!', this);
+      }, 1000),
+    };
+
+    foo.bar();
+
+    class Ololo {
+      constructor() {
+        this.log = debounce(function () {
+          console.log('FROM CLASS!', this);
+        }, 1000);
+      }
+
+      log() {
+        this.log();
+      }
+    }
+
+    const olo = new Ololo();
+    olo.log();
+  </script>
+
+</body>
+
+</html>

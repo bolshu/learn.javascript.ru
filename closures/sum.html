@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+
+<head>
+  <title>Sum</title>
+  <meta charset="utf-8">
+</head>
+
+
+<body>
+  <script>
+
+    function sum(num1) {
+
+      let currentSum = num1;
+
+      function f(num2) {
+        currentSum += num2;
+        return f;
+      }
+
+      f.getSum = function () {
+        alert(currentSum);
+      }
+
+      return f;
+    }
+
+    const foo = sum(1)(1)(2)(3);
+
+    foo.getSum();
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+  <title>Slider</title>
+  <meta charset="utf-8">
+  <style>
+    .slider {
+      border-radius: 5px;
+      background: #E0E0E0;
+      background: linear-gradient(left top, #E0E0E0, #EEEEEE);
+      width: 310px;
+      height: 15px;
+      margin: 5px;
+    }
+
+    .thumb {
+      width: 10px;
+      height: 25px;
+      border-radius: 3px;
+      position: relative;
+      left: 10px;
+      top: -5px;
+      background: blue;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="slider" class="slider">
+    <div class="thumb"></div>
+  </div>
+
+  <script>
+
+    class Slider {
+      constructor(elem) {
+        this.elem = elem;
+        this.isDrag = false;
+
+        // Сохраняем ссылку на функцию для добавления/удаления листнеров
+        this.onMouseUp = this.onMouseUp.bind(this);
+        this.onMouseMove = this.onMouseMove.bind(this);
+
+        this.elem.addEventListener('mousedown', e => {
+          e.preventDefault();
+
+          const closestThumb = e.target.closest('.thumb');
+
+          if (closestThumb && this.elem.contains(closestThumb)) {
+            this.isDrag = true;
+            this.addEventListeners();
+          }
+        });
+      }
+
+      addEventListeners() {
+        document.addEventListener('mouseup', this.onMouseUp);
+        document.addEventListener('mousemove', this.onMouseMove);
+      }
+
+      removeEventListeners() {
+        document.removeEventListener('mouseup', this.onMouseUp);
+        document.removeEventListener('mousemove', this.onMouseMove);
+      }
+
+      onMouseUp(e) {
+        if (this.isDrag) {
+          this.isDrag = false;
+          this.removeEventListeners();
+        }
+      }
+
+      onMouseMove(e) {
+        if (this.isDrag) {
+          this.moveThumb(e.clientX);
+        }
+      }
+
+      moveThumb(mouseXPos) {
+        const thumb = this.elem.querySelector('.thumb');
+        const thumbWidth = thumb.offsetWidth;
+
+        const sliderSize = this.elem.getBoundingClientRect();
+        const sliderWidth = sliderSize.width;
+        const sliderLeftLimit = sliderSize.x;
+        const sliderRightLimit = sliderWidth - thumbWidth;
+
+        if (mouseXPos < sliderLeftLimit) {
+          thumb.style.left = '0px';
+        } else if (mouseXPos > sliderRightLimit + sliderLeftLimit) {
+          thumb.style.left = `${sliderRightLimit}px`;
+        } else {
+          thumb.style.left = `${mouseXPos - sliderLeftLimit}px`;
+        }
+      }
+    }
+
+    const slide = new Slider(document.querySelector('#slider'));
+
+  </script>
+
+</body>
+
+</html>
+</script>
+
+</body>
+
+</html>

@@ -35,20 +35,20 @@
         this.elem = elem;
       }
 
-      render() {
+      _render() {
         const date = new Date();
 
         const hour = date.getHours();
-        this.setValue(hour, 'hour');
+        this._setValue(hour, 'hour');
 
         const min = date.getMinutes();
-        this.setValue(min, 'min');
+        this._setValue(min, 'min');
 
         const sec = date.getSeconds();
-        this.setValue(sec, 'sec');
+        this._setValue(sec, 'sec');
       }
 
-      setValue(value, selector) {
+      _setValue(value, selector) {
         if (value < 10) {
           value = `0${value}`;
         }
@@ -57,8 +57,8 @@
       }
 
       start() {
-        this.render();
-        this.timer = setInterval(() => this.render(), 1000);
+        this._render();
+        this.timer = setInterval(() => this._render(), 1000);
       }
 
       stop() {

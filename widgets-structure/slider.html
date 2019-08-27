@@ -84,9 +84,10 @@
         const thumb = this.elem.querySelector('.thumb');
         const thumbWidth = thumb.offsetWidth;
 
-        const sliderSize = this.elem.getBoundingClientRect();
-        const sliderWidth = sliderSize.width;
-        const sliderLeftLimit = sliderSize.x;
+        const {
+          x: sliderLeftLimit,
+          width: sliderWidth
+        } = this.elem.getBoundingClientRect();
         const sliderRightLimit = sliderWidth - thumbWidth;
 
         if (mouseXPos < sliderLeftLimit) {

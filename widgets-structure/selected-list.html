@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+  <title>Selected list</title>
+  <meta charset="utf-8">
+  <style>
+    li {
+      cursor: pointer;
+    }
+
+    .selected {
+      background-color: aqua;
+    }
+  </style>
+</head>
+
+<body>
+
+  <ul>
+    <li>Кристофер Робин</li>
+    <li>Винни-Пух</li>
+    <li>Ослик Иа</li>
+    <li>Мудрая Сова</li>
+    <li>Кролик. Просто кролик.</li>
+  </ul>
+
+  <script>
+
+    // keys enum
+    const KEYS = {
+      CTRL: 'Control',
+      SHIFT: 'Shift',
+      META: 'Meta',
+    }
+    const SELECTED_CLASS_NAME = 'selected';
+
+    class ListSelect {
+      constructor(list) {
+        // elements
+        this._list = list;
+        this._items = [...this._list.querySelectorAll('li')];
+
+        // selected items
+        this._selectedItems = [];
+
+        // key press
+        this._keyPress = null;
+
+        // last clicked item
+        this._lastClickedItemIndex;
+
+        // save context for events cb
+        this._keyDown = this._keyDown.bind(this);
+        this._keyUp = this._keyUp.bind(this);
+
+        document.addEventListener('keydown', this._keyDown);
+
+        this._list.addEventListener('click', e => {
+          e.preventDefault();
+
+          const item = e.target.closest('li');
+
+          if (!item) return;
+
+          if (!this._keyPress) {
+            if (!item.classList.contains(SELECTED_CLASS_NAME)) {
+              item.classList.add(SELECTED_CLASS_NAME);
+            }
+          } else {
+            if (this._keyPress === KEYS.SHIFT && Number.isInteger(this._lastClickedItemIndex)) {
+              console.log('CLICK WITH SHIFT');
+            } else {
+              item.classList.toggle(SELECTED_CLASS_NAME);
+            }
+          }
+
+          this._lastClickedItemIndex = this._items.indexOf(item);
+
+          this._updateSelectedItems();
+        });
+      }
+
+      _matchKeys(eventKey) {
+        for (const key in KEYS) {
+          if (eventKey === KEYS[key]) {
+            return true;
+          }
+        }
+      }
+
+      _keyDown(e) {
+        if (this._matchKeys(e.key)) {
+          this._keyPress = e.key;
+          document.addEventListener('keyup', this._keyUp);
+        }
+      }
+
+      _keyUp(e) {
+        if (this._matchKeys(e.key)) {
+          this._keyPress = null;
+          document.removeEventListener('keyup', this._keyUp);
+        }
+      }
+
+      _updateSelectedItems() {
+        this._selectedItems = this._getSelectedItems();
+      }
+
+      _getSelectedItems() {
+        return this._items.filter(item => {
+          return item.classList.contains(SELECTED_CLASS_NAME);
+        });
+      }
+
+      getSelected() {
+        console.log(this._selectedItems);
+      }
+    }
+
+    list = new ListSelect(document.querySelector('ul'));
+
+  </script>
+
+</body>
+
+</html>

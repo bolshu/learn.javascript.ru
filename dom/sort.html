@@ -44,11 +44,11 @@
             firstNameSortBtn,
             secondNameSortBtn,
             ageSortBtn,
-        ]
+        ];
 
         sortButtons.forEach(button => {
             button.addEventListener('click', clickSortHandler);
-        })
+        });
 
         function clickSortHandler(e) {
             const sortType = e.currentTarget.dataset.sort;
@@ -81,6 +81,8 @@
 
         // add to dom
         function addList() {
+            const fragment = document.createDocumentFragment;
+
             persons.forEach(person => {
                 const row = document.createElement('tr');
                 row.classList.add('person');
@@ -92,8 +94,10 @@
                     row.appendChild(elem);
                 }
 
-                table.appendChild(row);
+                fragment.innerHTML += row;
             });
+
+            table.appendChild(fragment);
         }
 
         // get data from dom

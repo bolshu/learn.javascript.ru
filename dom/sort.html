@@ -1,0 +1,122 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>temp</title>
+</head>
+
+<body>
+    <table id="table">
+        <tr>
+            <th id="sort-first-name" data-sort="first">Имя</th>
+            <th id="sort-second-name" data-sort="second">Фамилия</th>
+            <th id="sort-age" data-sort="age">Возраст</th>
+        </tr>
+        <tr class="person">
+            <td class="first-name">John</td>
+            <td class="second-name">Smith</td>
+            <td class="age">10</td>
+        </tr>
+        <tr class="person">
+            <td class="first-name">Pete</td>
+            <td class="second-name">Brown</td>
+            <td class="age">15</td>
+        </tr>
+        <tr class="person">
+            <td class="first-name">Ann</td>
+            <td class="second-name">Lee</td>
+            <td class="age">5</td>
+        </tr>
+    </table>
+
+    <script>
+        const table = document.querySelector('#table tbody');
+
+        const persons = getPersonsData();
+
+        const firstNameSortBtn = document.querySelector('#sort-first-name');
+        const secondNameSortBtn = document.querySelector('#sort-second-name');
+        const ageSortBtn = document.querySelector('#sort-age');
+
+        const sortButtons = [
+            firstNameSortBtn,
+            secondNameSortBtn,
+            ageSortBtn,
+        ]
+
+        sortButtons.forEach(button => {
+            button.addEventListener('click', clickSortHandler);
+        })
+
+        function clickSortHandler(e) {
+            const sortType = e.currentTarget.dataset.sort;
+            sortPersons(sortType);
+        }
+
+        // sorting
+        function sortPersons(sortType) {
+            persons.sort(function compare(a, b) {
+                if (a[sortType] > b[sortType]) {
+                    return 1;
+                }
+                if (a[sortType] < b[sortType]) {
+                    return -1;
+                }
+                return 0;
+            });
+            removeList();
+            addList();
+        }
+
+        // remove from dom
+        function removeList() {
+            const persons = document.querySelectorAll('.person');
+
+            persons.forEach(person => {
+                table.removeChild(person);
+            });
+        }
+
+        // add to dom
+        function addList() {
+            persons.forEach(person => {
+                const row = document.createElement('tr');
+                row.classList.add('person');
+
+                const first = document.createElement('td');
+                first.textContent = person.first;
+                row.appendChild(first);
+
+                const second = document.createElement('td');
+                second.textContent = person.second;
+                row.appendChild(second);
+
+                const age = document.createElement('td');
+                age.textContent = person.age;
+                row.appendChild(age);
+
+                table.appendChild(row);
+            });
+        }
+
+        // get data from dom
+        function getPersonsData() {
+            const persons = document.querySelectorAll('.person');
+            const personsData = [];
+
+            persons.forEach(person => {
+                personsData.push({
+                    first: person.querySelector('.first-name').textContent,
+                    second: person.querySelector('.second-name').textContent,
+                    age: Number(person.querySelector('.age').textContent),
+                });
+            });
+
+            return personsData;
+        }
+    </script>
+</body>
+
+</html>

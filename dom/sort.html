@@ -85,17 +85,12 @@
                 const row = document.createElement('tr');
                 row.classList.add('person');
 
-                const first = document.createElement('td');
-                first.textContent = person.first;
-                row.appendChild(first);
-
-                const second = document.createElement('td');
-                second.textContent = person.second;
-                row.appendChild(second);
-
-                const age = document.createElement('td');
-                age.textContent = person.age;
-                row.appendChild(age);
+                for (const key of person) {
+                    const elem = document.createElement('td');
+                    const data = person[key];
+                    elem.textContent = data;
+                    row.appendChild(elem);
+                }
 
                 table.appendChild(row);
             });
